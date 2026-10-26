@@ -12,6 +12,24 @@
 
 > 非官方项目，与鼠标厂商无任何关联。详见[免责声明](#免责声明)。
 
+<details>
+<summary><b>English summary</b></summary>
+
+**Veloci Hub** is a lightweight tray console for the MLOONG MX300 wireless mouse. It talks to the mouse directly over native HID reports — no vendor driver, no background service.
+
+- **Battery & charging** — tray icon reflects level and charging state in real time
+- **DPI switching** — one click in the panel; changes made with the physical DPI button sync back within a second
+- **OSD** — gear changes, low battery, and charge-limit reminders fade in at a screen corner with an intro animation
+- **Charge-limit guard** — nudges you to unplug at a configurable threshold (55%–95%) so the battery isn't parked at 100%
+- **Appearance** — dark/light themes, 0–100 background opacity, custom software icon
+- **Two-speed polling** — every 2 minutes in the background, 5 seconds while the panel is open or the tray icon is hovered
+
+Shipped as a single self-contained executable: no .NET runtime to install, just unzip and run. Fully offline — no network calls, no telemetry.
+
+*This is an unofficial project and is not affiliated with, endorsed by, or sponsored by the manufacturer. Product names and trademarks belong to their respective owners and are used only for descriptive, interoperability purposes. Provided "as is", without warranty of any kind.*
+
+</details>
+
 ## 功能
 
 - **电量与充电状态**：托盘图标实时反映电量，充电中 / 已充满单独标注
