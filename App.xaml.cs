@@ -24,7 +24,6 @@ namespace Mx300Hub
         private readonly HashSet<int> _warned = new();
         private FlyoutWindow? _flyout;
         private OsdWindow? _osd;
-        private bool _pinned;
         private DateTime _flyoutHiddenAt = DateTime.MinValue;
 
         public static AppSettings Settings { get; private set; } = new();
@@ -91,8 +90,7 @@ namespace Mx300Hub
             Trace("Waaagh Hub 已启动");
 
             // 支持 --show 直接展开控制台（便于从快捷方式/命令行直接唤出）
-            _pinned = e.Args.Any(a => a.Equals("--show", StringComparison.OrdinalIgnoreCase));
-            if (_pinned)
+            if (e.Args.Any(a => a.Equals("--show", StringComparison.OrdinalIgnoreCase)))
                 Dispatcher.BeginInvoke(new Action(ShowFlyoutInternal), DispatcherPriority.ApplicationIdle);
 
             // 调试用：--osd 启动后直接播一次预警 OSD（不改动真实电量判断）
@@ -329,7 +327,7 @@ namespace Mx300Hub
                 _osd?.HideNow();
                 if (_flyout == null)
                 {
-                    _flyout = new FlyoutWindow { AutoHide = !_pinned };
+                    _flyout = new FlyoutWindow();
                     _flyout.Closed += (_, _) =>
                     {
                         _flyout = null;

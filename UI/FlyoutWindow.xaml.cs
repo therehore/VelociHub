@@ -27,7 +27,7 @@ namespace Mx300Hub.UI
         private DpiSnapshot? _lastDpiSnapshot;
         private DateTime _shownAt = DateTime.MinValue;
 
-        /// <summary>true 时失焦/点击窗口外自动收起；由 --show 启动时置为 false。</summary>
+        /// <summary>true 时失焦/点击窗口外自动收起。目前恒为 true，保留开关便于以后做「固定面板」。</summary>
         public bool AutoHide { get; set; } = true;
 
         // 点击窗口外部关闭：轮询全局鼠标状态，比依赖 Deactivated 可靠
