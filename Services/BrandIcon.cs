@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Mx300Hub.Services
+namespace VelociHub.Services
 {
     /// <summary>
     /// 品牌标：默认使用内置 M 标；用户可指定任意本地图片替换。

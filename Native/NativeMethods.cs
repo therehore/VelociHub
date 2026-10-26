@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace Mx300Hub.Native
+namespace VelociHub.Native
 {
     internal static class NativeMethods
     {

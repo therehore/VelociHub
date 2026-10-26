@@ -1,0 +1,57 @@
+name: Bug 反馈
+description: 功能异常、崩溃、设备识别不到
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提 issue 前请先确认：用最新 Release 版本复现过，且已看过 README 的「实现说明」。
+        崩溃类问题**务必附上日志**，否则很难定位。
+  - type: textarea
+    id: what
+    attributes:
+      label: 现象
+      description: 发生了什么，期望是什么
+      placeholder: 例如：按鼠标实体 DPI 键，面板数字不变，也没有 OSD
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 启动程序
+        2. 打开面板
+        3. 按 DPI 键
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 面板右下角显示的版本号，或 Release 标签
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: 系统
+      placeholder: Windows 11 23H2 / Windows 10 22H2
+    validations:
+      required: true
+  - type: dropdown
+    id: connection
+    attributes:
+      label: 连接方式
+      options:
+        - 2.4G 接收器
+        - USB 直连
+        - 其他 / 不确定
+  - type: textarea
+    id: log
+    attributes:
+      label: 日志
+      description: 面板「复制诊断」粘贴过来，或附上 `%APPDATA%\VelociHub\app.log` 的末尾部分
+      render: text
+    validations:
+      required: false

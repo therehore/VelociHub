@@ -1,20 +1,18 @@
 using System;
 using System.Windows;
 using System.Windows.Media;
-using Mx300Hub.Services;
+using VelociHub.Services;
 
-namespace Mx300Hub.UI.Controls
+namespace VelociHub.UI.Controls
 {
     /// <summary>
-    /// 软件图标。默认绘制内置 M 标并整体翻转 180°（视觉上即 W）；
-    /// 用户在设置里指定了图片时改为等比居中绘制该图片，自动响应图标变更。
+    /// 软件图标。默认绘制内置 V 标；用户在设置里指定了图片时改为等比居中绘制该图片，自动响应图标变更。
     /// </summary>
     public sealed class BrandLogo : FrameworkElement
     {
-        /// <summary>M 标：两条立柱 + 中间 V，24×24 视口内留 3 单位边距。翻转 180° 后成为 W。</summary>
+        /// <summary>V 标：左右两腿对称，顶部平口、底部收窄，24×24 视口内留 3 单位边距。</summary>
         private static readonly Geometry Mark = Geometry.Parse(
-            "M3 20.5 L3 3.5 L7.4 3.5 L12 12.1 L16.6 3.5 L21 3.5 L21 20.5 L16.9 20.5 " +
-            "L16.9 10.4 L12.9 18.1 L11.1 18.1 L7.1 10.4 L7.1 20.5 Z");
+            "M3 4 L8.4 4 L12 15 L15.6 4 L21 4 L14.6 20.8 L9.4 20.8 Z");
 
         private static readonly Color DarkGreen = Color.FromRgb(0x44, 0xD6, 0x2C);
         private static readonly Color LightGreen = Color.FromRgb(0x18, 0x9E, 0x1F);
@@ -64,9 +62,7 @@ namespace Mx300Hub.UI.Controls
 
             dc.PushTransform(new TranslateTransform((w - 24 * s) / 2, (h - 24 * s) / 2));
             dc.PushTransform(new ScaleTransform(s, s));
-            dc.PushTransform(new RotateTransform(180, 12, 12));   // M 倒过来就是 W
             dc.DrawGeometry(brush, null, Mark);
-            dc.Pop();
             dc.Pop();
             dc.Pop();
         }

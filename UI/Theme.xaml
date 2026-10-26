@@ -64,6 +64,18 @@
         <Setter Property="Foreground" Value="{DynamicResource Text3Brush}" />
     </Style>
 
+    <!-- 可点击的文字链接（底部作者/项目主页）；悬停变强调色并加下划线 -->
+    <Style x:Key="FootLink" TargetType="TextBlock" BasedOn="{StaticResource TxtCaption}">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="TextDecorations" Value="{x:Null}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                <Setter Property="TextDecorations" Value="Underline" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- ================= 卡片 ================= -->
     <Style x:Key="Card" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource CardBrush}" />

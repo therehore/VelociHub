@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
-using Mx300Hub.Native;
+using VelociHub.Native;
 
-namespace Mx300Hub.Hid
+namespace VelociHub.Hid
 {
     public sealed class HidInterfaceInfo
     {

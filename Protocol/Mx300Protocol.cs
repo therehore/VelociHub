@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mx300Hub.Protocol
+namespace VelociHub.Protocol
 {
     public enum ReportKind
     {

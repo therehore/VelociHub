@@ -7,18 +7,26 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Win32;
-using Mx300Hub.Services;
-using Mx300Hub.UI;
+using VelociHub.Services;
+using VelociHub.UI;
 
-namespace Mx300Hub
+namespace VelociHub
 {
     public partial class App : Application
     {
         public const string WebDriverUrl = "https://hub.mloongplanet.com/#/device";
         public const string PairingUrl = "https://hub.mloongplanet.com/#/tools?pairing=MX300";
 
+        /// <summary>作者主页与仓库地址，界面上「作者 GitHub」按钮、托盘菜单、诊断信息都用这两个。</summary>
+        public const string AuthorHandle = "therehore";
+        public const string AuthorUrl = "https://github.com/therehore";
+        public const string RepoUrl = "https://github.com/therehore/VelociHub";
+
         private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-        private const string RunValueName = "MX300Hub";
+        private const string RunValueName = "VelociHub";
+
+        /// <summary>改名前写进注册表的启动项名，启动时顺手清理，避免残留项指向已删除的 exe。</summary>
+        private static readonly string[] LegacyRunValues = { "MX300Hub", "WaaaghHub" };
 
         private static Mutex? _mutex;
         private readonly HashSet<int> _warned = new();
@@ -48,6 +56,7 @@ namespace Mx300Hub
 
             base.OnStartup(e);
 
+            Services.AppPaths.Ensure();   // 先建目录/迁移旧设置，再读配置
             Settings = AppSettings.Load();
             BrandIcon.Load();
             ApplyBrandIconArg(e.Args);
@@ -72,6 +81,7 @@ namespace Mx300Hub
             Tray.Hover += OnTrayHover;
             Tray.ExitRequested += () => { Shutdown(); };
             Tray.WebDriverRequested += () => OpenUrl(WebDriverUrl);
+            Tray.AuthorRequested += () => OpenUrl(AuthorUrl);
             Tray.OsdToggled += on =>
             {
                 Settings.OsdEnabled = on;
@@ -87,7 +97,7 @@ namespace Mx300Hub
             Tray.SyncMenuState(Settings.OsdEnabled, Settings.StartWithWindows);
             Device.Start();
             RefreshTray();
-            Trace("Waaagh Hub 已启动");
+            Trace("Veloci Hub 已启动");
 
             // 支持 --show 直接展开控制台（便于从快捷方式/命令行直接唤出）
             if (e.Args.Any(a => a.Equals("--show", StringComparison.OrdinalIgnoreCase)))
@@ -378,6 +388,8 @@ namespace Mx300Hub
                 else
                 {
                     key.DeleteValue(RunValueName, throwOnMissingValue: false);
+                    foreach (string legacy in LegacyRunValues)
+                        key.DeleteValue(legacy, throwOnMissingValue: false);
                 }
             }
             catch (Exception ex)
@@ -390,9 +402,17 @@ namespace Mx300Hub
         {
             try
             {
-                using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath, writable: false);
-                bool present = key?.GetValue(RunValueName) != null;
-                Settings.StartWithWindows = present;
+                using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath, writable: true);
+                if (key == null) return;
+                bool present = key.GetValue(RunValueName) != null;
+                bool legacy = LegacyRunValues.Any(v => key.GetValue(v) != null);
+                Settings.StartWithWindows = present || legacy;
+                if (!legacy) return;
+
+                // 旧名字的自启项：删掉旧值，用当前 exe 路径重新登记
+                foreach (string v in LegacyRunValues) key.DeleteValue(v, throwOnMissingValue: false);
+                string exe = Process.GetCurrentProcess().MainModule?.FileName ?? "";
+                if (exe.Length > 0) key.SetValue(RunValueName, "\"" + exe + "\"");
             }
             catch { }
         }

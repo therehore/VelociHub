@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Mx300Hub.UI
+namespace VelociHub.UI
 {
     /// <summary>
     /// 深浅色皮肤：改写 Application 级别的那几个 DynamicResource 画笔，

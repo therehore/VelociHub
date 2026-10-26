@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Mx300Hub.UI.Controls
+namespace VelociHub.UI.Controls
 {
     /// <summary>电量环形指示器（纯矢量绘制）。</summary>
     public sealed class BatteryRing : FrameworkElement

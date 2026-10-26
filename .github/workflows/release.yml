@@ -1,0 +1,47 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: 打包单文件
+        run: >
+          dotnet publish -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true
+          -p:EnableCompressionInSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=none
+          -o dist
+
+      - name: 组装发布包
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $dir = "VelociHub-$tag-win-x64"
+          New-Item -ItemType Directory -Path $dir | Out-Null
+          Copy-Item dist/VelociHub.exe $dir
+          Copy-Item README.md, LICENSE, THIRD-PARTY-NOTICES.md $dir
+          Compress-Archive -Path $dir -DestinationPath "$dir.zip"
+
+      - name: 创建 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: VelociHub-*-win-x64.zip
+          generate_release_notes: true
+          draft: true

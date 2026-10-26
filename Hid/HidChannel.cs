@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Win32.SafeHandles;
-using Mx300Hub.Native;
+using VelociHub.Native;
 
-namespace Mx300Hub.Hid
+namespace VelociHub.Hid
 {
     /// <summary>
     /// 一条打开的 HID 通道（单个集合）。写入使用「无 ReportID 前缀的定长报告」，

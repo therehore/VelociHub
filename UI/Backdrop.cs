@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using Mx300Hub.Native;
+using VelociHub.Native;
 
-namespace Mx300Hub.UI
+namespace VelociHub.UI
 {
     /// <summary>
     /// Windows 11 系统级亚克力/云母背景；失败时退化为 Win10 的 Acrylic 强调色模糊。

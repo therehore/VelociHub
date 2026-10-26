@@ -7,7 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
-namespace Mx300Hub.UI
+namespace VelociHub.UI
 {
     public partial class OsdWindow : Window
     {

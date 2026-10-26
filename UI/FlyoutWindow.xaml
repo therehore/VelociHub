@@ -1,8 +1,8 @@
-<Window x:Class="Mx300Hub.UI.FlyoutWindow"
+<Window x:Class="VelociHub.UI.FlyoutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ctrl="clr-namespace:Mx300Hub.UI.Controls"
-        Title="Waaagh Hub" Width="432" Height="672"
+        xmlns:ctrl="clr-namespace:VelociHub.UI.Controls"
+        Title="Veloci Hub" Width="432" Height="672"
         WindowStyle="None" AllowsTransparency="False" Background="Transparent"
         ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal"
@@ -35,7 +35,7 @@
                     <ctrl:BrandLogo x:Name="HeaderLogo" Width="21" Height="21"
                                     VerticalAlignment="Center" Margin="2,0,0,0" />
                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                        <TextBlock x:Name="TitleText" Text="Waaagh Hub" Style="{StaticResource TxtH2}" />
+                        <TextBlock x:Name="TitleText" Text="Veloci Hub" Style="{StaticResource TxtH2}" />
                         <TextBlock x:Name="SubtitleText" Text="正在检测接收器…" Style="{StaticResource TxtCaption}" />
                     </StackPanel>
                 </StackPanel>
@@ -391,13 +391,16 @@
                         </Border>
 
                         <TextBlock Text="工具" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="打开网页驱动" Style="{StaticResource GhostBtn}" Click="OpenWebDriver_Click" />
-                            <Button Content="2.4G 配对工具" Style="{StaticResource GhostBtn}" Margin="8,0,0,0"
-                                    Click="OpenPairing_Click" />
-                            <Button Content="复制诊断" Style="{StaticResource GhostBtn}" Margin="8,0,0,0"
-                                    Click="CopyDiag_Click" />
-                        </StackPanel>
+                        <WrapPanel>
+                            <Button Content="网页驱动" Style="{StaticResource GhostBtn}" Margin="0,0,8,0"
+                                    Click="OpenWebDriver_Click" ToolTip="打开厂商网页版驱动设置" />
+                            <Button Content="2.4G 配对" Style="{StaticResource GhostBtn}" Margin="0,0,8,0"
+                                    Click="OpenPairing_Click" ToolTip="打开 2.4G 接收器配对工具" />
+                            <Button Content="复制诊断" Style="{StaticResource GhostBtn}" Margin="0,0,8,0"
+                                    Click="CopyDiag_Click" ToolTip="把设备状态与日志复制到剪贴板" />
+                            <Button Content="作者 GitHub" Style="{StaticResource GhostBtn}"
+                                    Click="OpenAuthor_Click" ToolTip="https://github.com/therehore" />
+                        </WrapPanel>
 
                         <TextBlock Text="通信日志" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
                         <Border Style="{StaticResource Card}" Padding="8">
@@ -414,9 +417,15 @@
             <Grid Grid.Row="4" Margin="0,8,0,0">
                 <TextBlock x:Name="StatusLine" Text="后台监控中" Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="Waaagh Hub" Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="RepoLink" Text="Veloci Hub" Style="{StaticResource FootLink}"
+                               VerticalAlignment="Center" ToolTip="打开项目主页"
+                               MouseLeftButtonUp="RepoLink_Click" />
                     <TextBlock Text=" · " Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
                     <TextBlock x:Name="VerLine" Text="v1.0" Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
+                    <TextBlock Text=" · by " Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="AuthorLink" Text="@therehore" Style="{StaticResource FootLink}"
+                               VerticalAlignment="Center" ToolTip="https://github.com/therehore"
+                               MouseLeftButtonUp="AuthorLink_Click" />
                 </StackPanel>
             </Grid>
         </Grid>

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Mx300Hub.Hid;
-using Mx300Hub.Protocol;
+using VelociHub.Hid;
+using VelociHub.Protocol;
 
-namespace Mx300Hub.Services
+namespace VelociHub.Services
 {
     public enum LinkState
     {

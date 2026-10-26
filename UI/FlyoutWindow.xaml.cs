@@ -9,10 +9,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Mx300Hub.Protocol;
-using Mx300Hub.Services;
+using VelociHub.Protocol;
+using VelociHub.Services;
 
-namespace Mx300Hub.UI
+namespace VelociHub.UI
 {
     public partial class FlyoutWindow : Window
     {
@@ -683,7 +683,9 @@ namespace Mx300Hub.UI
         private void CopyDiag_Click(object sender, RoutedEventArgs e)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Waaagh Hub 诊断信息");
+            sb.AppendLine("Veloci Hub 诊断信息");
+            sb.AppendLine($"版本: {VerLine.Text}  作者: @{App.AuthorHandle}");
+            sb.AppendLine($"仓库: {App.RepoUrl}");
             sb.AppendLine($"时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             sb.AppendLine($"系统: {Environment.OSVersion}");
             sb.AppendLine($"状态: {Dev?.State}");
@@ -702,6 +704,11 @@ namespace Mx300Hub.UI
         {
             try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); } catch { }
         }
+
+        // ================= 作者 / 项目主页 =================
+        private void OpenAuthor_Click(object sender, RoutedEventArgs e) => OpenUrl(App.AuthorUrl);
+        private void AuthorLink_Click(object sender, MouseButtonEventArgs e) => OpenUrl(App.AuthorUrl);
+        private void RepoLink_Click(object sender, MouseButtonEventArgs e) => OpenUrl(App.RepoUrl);
 
         // ================= 状态同步 =================
         private void SyncUi()

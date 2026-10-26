@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Threading;
 using WF = System.Windows.Forms;
 
-namespace Mx300Hub.Services
+namespace VelociHub.Services
 {
     /// <summary>托盘图标 + 右键菜单。图标按电量实时重绘。</summary>
     public sealed class TrayService : IDisposable
@@ -27,6 +27,7 @@ namespace Mx300Hub.Services
         public event Action? Hover;
         public event Action? ExitRequested;
         public event Action? WebDriverRequested;
+        public event Action? AuthorRequested;
         public event Action<bool>? OsdToggled;
         public event Action<bool>? StartupToggled;
 
@@ -40,7 +41,7 @@ namespace Mx300Hub.Services
                 Font = new Font("Microsoft YaHei UI", 9f)
             };
 
-            var open = new WF.ToolStripMenuItem("打开 Waaagh Hub") { Font = new Font("Microsoft YaHei UI", 9f, FontStyle.Bold) };
+            var open = new WF.ToolStripMenuItem("打开 Veloci Hub") { Font = new Font("Microsoft YaHei UI", 9f, FontStyle.Bold) };
             open.Click += (_, _) => Invoke(OpenRequested);
 
             var refresh = new WF.ToolStripMenuItem("立即读取电量");
@@ -55,6 +56,9 @@ namespace Mx300Hub.Services
             var web = new WF.ToolStripMenuItem("打开网页驱动");
             web.Click += (_, _) => Invoke(WebDriverRequested);
 
+            var author = new WF.ToolStripMenuItem($"作者 GitHub（@{App.AuthorHandle}）");
+            author.Click += (_, _) => Invoke(AuthorRequested);
+
             var exit = new WF.ToolStripMenuItem("退出");
             exit.Click += (_, _) => Invoke(ExitRequested);
 
@@ -65,12 +69,14 @@ namespace Mx300Hub.Services
             _menu.Items.Add(_startupItem);
             _menu.Items.Add(new WF.ToolStripSeparator());
             _menu.Items.Add(web);
+            _menu.Items.Add(author);
+            _menu.Items.Add(new WF.ToolStripSeparator());
             _menu.Items.Add(exit);
 
             _icon = new WF.NotifyIcon
             {
                 ContextMenuStrip = _menu,
-                Text = "Waaagh Hub",
+                Text = "Veloci Hub",
                 Visible = true,
                 Icon = RenderIcon(-1, false)
             };
@@ -109,8 +115,8 @@ namespace Mx300Hub.Services
                 }
 
                 string text = level >= 0
-                    ? $"Waaagh · {level}% {LevelTier(level)}{(charging ? " 充电中" : "")} · {stateText}"
-                    : $"Waaagh · {stateText}";
+                    ? $"Veloci · {level}% {LevelTier(level)}{(charging ? " 充电中" : "")} · {stateText}"
+                    : $"Veloci · {stateText}";
                 if (text.Length > 62) text = text.Substring(0, 62);
                 _icon.Text = text;
             });

@@ -36,6 +36,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
         with:
-          name: WaaaghHub-win-x64
-          path: dist/WaaaghHub.exe
+          name: VelociHub-win-x64
+          path: dist/VelociHub.exe
           if-no-files-found: error

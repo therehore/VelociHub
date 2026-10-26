@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Mx300Hub.Services
+namespace VelociHub.Services
 {
     public sealed class AppSettings
     {
