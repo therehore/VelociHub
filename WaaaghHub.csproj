@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <LangVersion>10.0</LangVersion>
+    <AssemblyName>WaaaghHub</AssemblyName>
+    <RootNamespace>Mx300Hub</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Product>Waaagh Hub</Product>
+    <AssemblyTitle>Waaagh Hub</AssemblyTitle>
+    <Description>Waaagh Hub — MX300 轻量本地控制台</Description>
+    <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <DebugType>none</DebugType>
+    <!-- WPF + WinForms 混合时，DPI 感知必须留在 manifest 中（否则 WPF 变模糊） -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\*.bak" />
+  </ItemGroup>
+
+</Project>

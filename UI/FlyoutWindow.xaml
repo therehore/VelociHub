@@ -1,0 +1,424 @@
+<Window x:Class="Mx300Hub.UI.FlyoutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:Mx300Hub.UI.Controls"
+        Title="Waaagh Hub" Width="432" Height="672"
+        WindowStyle="None" AllowsTransparency="False" Background="Transparent"
+        ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal"
+        FontFamily="{StaticResource UiFont}">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Border x:Name="Root" CornerRadius="8" BorderBrush="{DynamicResource StrokeBrush}" BorderThickness="1">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0.6,1">
+                <GradientStop Color="#4D101218" Offset="0" />
+                <GradientStop Color="#4D0C0E14" Offset="1" />
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid Margin="14,0,14,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="52" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- ============ 标题栏 ============ -->
+            <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ctrl:BrandLogo x:Name="HeaderLogo" Width="21" Height="21"
+                                    VerticalAlignment="Center" Margin="2,0,0,0" />
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="TitleText" Text="Waaagh Hub" Style="{StaticResource TxtH2}" />
+                        <TextBlock x:Name="SubtitleText" Text="正在检测接收器…" Style="{StaticResource TxtCaption}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button x:Name="RefreshBtn" Content="⟳" Style="{StaticResource IconBtn}" FontSize="16"
+                            ToolTip="重新读取设备状态" Click="Refresh_Click" />
+                    <Button x:Name="CloseBtn" Content="✕" Style="{StaticResource IconBtn}" FontSize="12"
+                            ToolTip="隐藏窗口（继续后台监控）" Click="Close_Click" />
+                </StackPanel>
+            </Grid>
+
+            <!-- ============ 电量主卡 ============ -->
+            <Border Grid.Row="1" Style="{StaticResource Card}" Padding="14,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Width="86" Height="86">
+                        <ctrl:BatteryRing x:Name="Ring" Level="-1" RingWidth="7" />
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock x:Name="LevelText" Text="--" FontFamily="{StaticResource DisplayFont}"
+                                       FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock x:Name="LevelUnit" Text="%" Style="{StaticResource TxtCaption}"
+                                       HorizontalAlignment="Center" Margin="0,-2,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Column="1" Margin="16,2,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="LinkChip" Background="{DynamicResource ChipBrush}" CornerRadius="6" Padding="7,2">
+                                <TextBlock x:Name="LinkChipText" Text="检测中" Style="{StaticResource TxtCaption}"
+                                           Foreground="{DynamicResource Text2Brush}" />
+                            </Border>
+                            <Border x:Name="ChargeChip" Background="#204FC3F7" CornerRadius="6" Padding="7,2"
+                                    Margin="6,0,0,0" Visibility="Collapsed">
+                                <TextBlock x:Name="ChargeChipText" Text="充电中" Style="{StaticResource TxtCaption}"
+                                           Foreground="{StaticResource ChargeBrush}" />
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock x:Name="BatteryHint" Text="等待设备应答…" Style="{StaticResource TxtBody}"
+                                   Margin="0,8,0,0" />
+                        <TextBlock x:Name="UpdatedText" Text="尚未读取" Style="{StaticResource TxtCaption}"
+                                   Margin="0,3,0,0" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <Button x:Name="ReadBatteryBtn" Content="立即读取" Style="{StaticResource GhostBtn}"
+                                    Height="26" FontSize="11.5" Click="ReadBattery_Click" />
+                            <Button x:Name="TestOsdBtn" Content="测试预警" Style="{StaticResource GhostBtn}"
+                                    Height="26" FontSize="11.5" Margin="6,0,0,0" Click="TestOsd_Click" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ============ 分段导航 ============ -->
+            <Border Grid.Row="2" Style="{StaticResource SegGroup}" Margin="0,10,0,8" HorizontalAlignment="Stretch">
+                <UniformGrid Columns="4">
+                    <RadioButton x:Name="TabPerf" GroupName="tab" Content="性能" Style="{StaticResource SegBtn}"
+                                 IsChecked="True" Checked="Tab_Checked" />
+                    <RadioButton x:Name="TabDpi" GroupName="tab" Content="DPI" Style="{StaticResource SegBtn}"
+                                 Checked="Tab_Checked" />
+                    <RadioButton x:Name="TabLight" GroupName="tab" Content="灯效" Style="{StaticResource SegBtn}"
+                                 Checked="Tab_Checked" />
+                    <RadioButton x:Name="TabDevice" GroupName="tab" Content="设备" Style="{StaticResource SegBtn}"
+                                 Checked="Tab_Checked" />
+                </UniformGrid>
+            </Border>
+
+            <!-- ============ 内容区 ============ -->
+            <Grid Grid.Row="3">
+
+                <!-- 性能 -->
+                <ScrollViewer x:Name="PanelPerf" Style="{StaticResource SlimScrollViewer}">
+                    <StackPanel>
+                        <TextBlock Text="回报率" Style="{StaticResource TxtH2}" Margin="2,0,0,6" />
+                        <Border Style="{StaticResource SegGroup}">
+                            <UniformGrid Columns="4">
+                                <RadioButton x:Name="Rate125" GroupName="rate" Content="125" Style="{StaticResource SegBtn}" Click="Rate_Click" Tag="125" />
+                                <RadioButton x:Name="Rate250" GroupName="rate" Content="250" Style="{StaticResource SegBtn}" Click="Rate_Click" Tag="250" />
+                                <RadioButton x:Name="Rate500" GroupName="rate" Content="500" Style="{StaticResource SegBtn}" Click="Rate_Click" Tag="500" />
+                                <RadioButton x:Name="Rate1000" GroupName="rate" Content="1000" Style="{StaticResource SegBtn}" Click="Rate_Click" Tag="1000" />
+                            </UniformGrid>
+                        </Border>
+
+                        <TextBlock Text="传感器" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Height="30">
+                                    <TextBlock Text="Motion Sync 同步" Style="{StaticResource RowLabel}" />
+                                    <CheckBox x:Name="SwMotionSync" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="Sensor_Click" />
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" />
+                                <Grid Height="30">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Ripple Control 波纹校正" Style="{StaticResource TxtBody}" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="SwRipple" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="Sensor_Click" />
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" />
+                                <Grid Height="30">
+                                    <TextBlock Text="Angle Snapping 角度吸附" Style="{StaticResource RowLabel}" />
+                                    <CheckBox x:Name="SwAngle" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="Sensor_Click" />
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" />
+                                <Grid Height="30">
+                                    <TextBlock Text="滚轮反向" Style="{StaticResource RowLabel}" />
+                                    <CheckBox x:Name="SwScroll" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="Scroll_Click" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="静默高度 (LOD)" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <Border Style="{StaticResource SegGroup}">
+                            <UniformGrid Columns="2">
+                                <RadioButton x:Name="Lod1" GroupName="lod" Content="1 mm 低" Style="{StaticResource SegBtn}" Click="Lod_Click" Tag="1" />
+                                <RadioButton x:Name="Lod2" GroupName="lod" Content="2 mm 高" Style="{StaticResource SegBtn}" Click="Lod_Click" Tag="2" />
+                            </UniformGrid>
+                        </Border>
+
+                        <Grid Margin="2,14,2,6">
+                            <TextBlock Text="按键响应时间" Style="{StaticResource TxtH2}" />
+                            <TextBlock x:Name="DebounceText" Text="--" Style="{StaticResource RowValue}" />
+                        </Grid>
+                        <Slider x:Name="DebounceSlider" Style="{StaticResource SlimSlider}" Minimum="0" Maximum="30"
+                                SmallChange="1" LargeChange="4" TickFrequency="1" IsSnapToTickEnabled="True"
+                                ValueChanged="Debounce_Changed" />
+
+                        <Grid Margin="2,12,2,6">
+                            <TextBlock Text="休眠时间" Style="{StaticResource TxtH2}" />
+                            <TextBlock x:Name="SleepText" Text="--" Style="{StaticResource RowValue}" />
+                        </Grid>
+                        <Slider x:Name="SleepSlider" Style="{StaticResource SlimSlider}" Minimum="0" Maximum="30"
+                                SmallChange="1" LargeChange="5" TickFrequency="1" IsSnapToTickEnabled="True"
+                                ValueChanged="Sleep_Changed" />
+
+                        <TextBlock Text="其他" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Height="30">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="高速模式" Style="{StaticResource TxtBody}" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="SwHighSpeed" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="HighSpeed_Click" />
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" />
+                                <Grid Height="34">
+                                    <TextBlock Text="唤醒方式" Style="{StaticResource RowLabel}" />
+                                    <Border Style="{StaticResource SegGroup}" HorizontalAlignment="Right" Padding="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="WakeClick" GroupName="wake" Content="点击" Style="{StaticResource SegBtn}"
+                                                         Padding="8,3" Click="Wake_Click" Tag="0" />
+                                            <RadioButton x:Name="WakeMove" GroupName="wake" Content="移动" Style="{StaticResource SegBtn}"
+                                                         Padding="8,3" Click="Wake_Click" Tag="1" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock x:Name="PerfHint" Text="" Style="{StaticResource TxtCaption}" Margin="2,10,0,6" />
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- DPI -->
+                <ScrollViewer x:Name="PanelDpi" Style="{StaticResource SlimScrollViewer}" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="DPI 模式" Style="{StaticResource TxtH2}" Margin="2,0,0,6" />
+                        <Border Style="{StaticResource SegGroup}">
+                            <UniformGrid Columns="2">
+                                <RadioButton x:Name="ModeShoot" GroupName="dpimode" Content="射击（普通）" Style="{StaticResource SegBtn}" Click="DpiMode_Click" Tag="1" />
+                                <RadioButton x:Name="ModeHigh" GroupName="dpimode" Content="高速（高 DPI）" Style="{StaticResource SegBtn}" Click="DpiMode_Click" Tag="2" />
+                            </UniformGrid>
+                        </Border>
+
+                        <Grid Margin="2,14,2,6">
+                            <TextBlock Text="档位" Style="{StaticResource TxtH2}" />
+                            <TextBlock x:Name="DpiHint" Text="" Style="{StaticResource RowValue}" />
+                        </Grid>
+
+                        <StackPanel x:Name="DpiList" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,6">
+                            <Button x:Name="DpiApplyBtn" Content="写入设备" Style="{StaticResource PrimaryBtn}" Click="DpiApply_Click" />
+                            <Button x:Name="DpiReloadBtn" Content="重新读取" Style="{StaticResource GhostBtn}" Margin="8,0,0,0" Click="DpiReload_Click" />
+                        </StackPanel>
+                        <TextBlock Text="提示：点击左侧圆点可切换当前生效档位；数值范围 100–26000。" Style="{StaticResource TxtCaption}" />
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- 灯效 -->
+                <ScrollViewer x:Name="PanelLight" Style="{StaticResource SlimScrollViewer}" Visibility="Collapsed">
+                    <StackPanel>
+                        <Border Style="{StaticResource Card}">
+                            <Grid Height="30">
+                                <TextBlock Text="灯效开关" Style="{StaticResource RowLabel}" />
+                                <CheckBox x:Name="SwLight" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                          Click="Light_Click" />
+                            </Grid>
+                        </Border>
+
+                        <TextBlock Text="效果" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <Border Style="{StaticResource SegGroup}">
+                            <UniformGrid Columns="3">
+                                <RadioButton x:Name="LightOff" GroupName="lightfx" Content="关闭" Style="{StaticResource SegBtn}" Click="LightFx_Click" Tag="0" />
+                                <RadioButton x:Name="LightStatic" GroupName="lightfx" Content="常亮" Style="{StaticResource SegBtn}" Click="LightFx_Click" Tag="1" />
+                                <RadioButton x:Name="LightBreath" GroupName="lightfx" Content="呼吸" Style="{StaticResource SegBtn}" Click="LightFx_Click" Tag="2" />
+                            </UniformGrid>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+                            <StackPanel>
+                                <TextBlock Text="当前灯效" Style="{StaticResource TxtCaption}" />
+                                <TextBlock x:Name="LightCurrent" Text="--" Style="{StaticResource TxtBody}" Margin="0,3,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="MX300 固件仅暴露基础灯效（开关 / 常亮 / 呼吸）。更多灯效（流光、调色板、自定义分区）请使用网页驱动。"
+                                   Style="{StaticResource TxtCaption}" Margin="2,12,12,0" TextWrapping="Wrap" />
+                        <Button Content="打开网页驱动（灯效页）" Style="{StaticResource GhostBtn}" Margin="0,10,0,0"
+                                HorizontalAlignment="Left" Click="OpenWebDriverLight_Click" />
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- 设备 -->
+                <ScrollViewer x:Name="PanelDevice" Style="{StaticResource SlimScrollViewer}" Visibility="Collapsed">
+                    <StackPanel>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Height="26">
+                                    <TextBlock Text="固件版本" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="FwText" Text="--" Style="{StaticResource TxtBody}" Foreground="{DynamicResource TextBrush}"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" />
+                                <Grid Height="26">
+                                    <TextBlock Text="连接方式" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="LinkText" Text="--" Style="{StaticResource TxtBody}" Foreground="{DynamicResource TextBrush}"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" />
+                                <Grid Height="26">
+                                    <TextBlock Text="设备标识" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="VidText" Text="--" Style="{StaticResource TxtMono}"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" />
+                                <Grid Height="26">
+                                    <TextBlock Text="厂商接口" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="UsageText" Text="--" Style="{StaticResource TxtMono}"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="外观" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Height="26">
+                                    <TextBlock Text="背景不透明度" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="BgOpacityText" Text="30%" Style="{StaticResource RowValue}" />
+                                </Grid>
+                                <Slider x:Name="BgOpacitySlider" Style="{StaticResource SlimSlider}" Minimum="0" Maximum="100"
+                                        TickFrequency="5" IsSnapToTickEnabled="True" Value="30" ValueChanged="BgOpacity_Changed" />
+                                <Border Style="{StaticResource RowLine}" Margin="0,6" />
+                                <Grid Height="32">
+                                    <TextBlock Text="配色模式" Style="{StaticResource RowLabel}" />
+                                    <Border Style="{StaticResource SegGroup}" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="SegDark" Content="深色" GroupName="AppearanceMode"
+                                                         Style="{StaticResource SegBtn}" Click="ThemeMode_Click" />
+                                            <RadioButton x:Name="SegLight" Content="浅色" GroupName="AppearanceMode"
+                                                         Style="{StaticResource SegBtn}" Margin="2,0,0,0" Click="ThemeMode_Click" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                                <Border Style="{StaticResource RowLine}" Margin="0,6" />
+                                <Grid Height="34">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ctrl:BrandLogo x:Name="LogoSample" Width="15" Height="15" />
+                                        <TextBlock x:Name="LogoLabel" Text="软件图标" Style="{StaticResource RowLabel}"
+                                                   Margin="7,0,0,0" ToolTip="支持 PNG / JPG / BMP / GIF / ICO，自动缩放到 256px" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button x:Name="PickLogoBtn" Content="自定义…" Style="{StaticResource GhostBtn}"
+                                                Height="26" FontSize="11.5" Padding="9,0" Click="PickLogo_Click" />
+                                        <Button x:Name="ResetLogoBtn" Content="默认" Style="{StaticResource GhostBtn}"
+                                                Height="26" FontSize="11.5" Padding="9,0" Margin="6,0,0,0"
+                                                Click="ResetLogo_Click" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="预警设置" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Height="28">
+                                    <TextBlock Text="电量低于" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="Warn1Text" Text="20%" Style="{StaticResource RowValue}" />
+                                </Grid>
+                                <Slider x:Name="Warn1Slider" Style="{StaticResource SlimSlider}" Minimum="5" Maximum="60"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" Value="20" ValueChanged="Warn1_Changed" />
+                                <Grid Height="28" Margin="0,8,0,0">
+                                    <TextBlock Text="电量低于" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="Warn2Text" Text="10%" Style="{StaticResource RowValue}" />
+                                </Grid>
+                                <Slider x:Name="Warn2Slider" Style="{StaticResource SlimSlider}" Minimum="3" Maximum="40"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" Value="10" ValueChanged="Warn2_Changed" />
+                                <Border Style="{StaticResource RowLine}" Margin="0,6" />
+                                <Grid Height="30">
+                                    <TextBlock Text="充电上限保护" Style="{StaticResource RowLabel}" />
+                                    <CheckBox x:Name="SwChargeLimit" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="ChargeLimit_Click" />
+                                </Grid>
+                                <Grid Height="28">
+                                    <TextBlock Text="充到" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="ChargeLimitText" Text="80%" Style="{StaticResource RowValue}" />
+                                </Grid>
+                                <Slider x:Name="ChargeLimitSlider" Style="{StaticResource SlimSlider}" Minimum="55" Maximum="95"
+                                        TickFrequency="5" IsSnapToTickEnabled="True" Value="80" ValueChanged="ChargeLimit_Changed" />
+                                <TextBlock x:Name="ChargeLimitHint" Style="{StaticResource TxtCaption}"
+                                           Text="达到上限后弹出提醒，建议取下鼠标" Margin="0,2,0,0" />
+                                <Border Style="{StaticResource RowLine}" Margin="0,6" />
+                                <Grid Height="30">
+                                    <TextBlock Text="OSD 屏幕提示" Style="{StaticResource RowLabel}" />
+                                    <CheckBox x:Name="SwOsd" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="Osd_Click" />
+                                </Grid>
+                                <Grid Height="28">
+                                    <TextBlock Text="后台轮询间隔" Style="{StaticResource RowLabel}" />
+                                    <TextBlock x:Name="PollText" Text="2 分钟" Style="{StaticResource RowValue}" />
+                                </Grid>
+                                <Slider x:Name="PollSlider" Style="{StaticResource SlimSlider}" Minimum="15" Maximum="300"
+                                        TickFrequency="15" IsSnapToTickEnabled="True" Value="120" ValueChanged="Poll_Changed" />
+                                <TextBlock x:Name="PollHint" Style="{StaticResource TxtCaption}"
+                                           Text="悬停托盘图标或打开面板时自动改为 5 秒" Margin="0,2,0,0" />
+                                <Border Style="{StaticResource RowLine}" Margin="0,6" />
+                                <Grid Height="30">
+                                    <TextBlock Text="开机自动启动" Style="{StaticResource RowLabel}" />
+                                    <CheckBox x:Name="SwStartup" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                                              Click="Startup_Click" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="工具" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="打开网页驱动" Style="{StaticResource GhostBtn}" Click="OpenWebDriver_Click" />
+                            <Button Content="2.4G 配对工具" Style="{StaticResource GhostBtn}" Margin="8,0,0,0"
+                                    Click="OpenPairing_Click" />
+                            <Button Content="复制诊断" Style="{StaticResource GhostBtn}" Margin="8,0,0,0"
+                                    Click="CopyDiag_Click" />
+                        </StackPanel>
+
+                        <TextBlock Text="通信日志" Style="{StaticResource TxtH2}" Margin="2,14,0,6" />
+                        <Border Style="{StaticResource Card}" Padding="8">
+                            <ScrollViewer Height="120" x:Name="LogScroll" Style="{StaticResource SlimScrollViewer}">
+                                <TextBlock x:Name="LogText" Style="{StaticResource TxtMono}" TextWrapping="Wrap" />
+                            </ScrollViewer>
+                        </Border>
+                        <TextBlock x:Name="FootNote" Text="" Style="{StaticResource TxtCaption}" Margin="2,10,0,6" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- ============ 底部 ============ -->
+            <Grid Grid.Row="4" Margin="0,8,0,0">
+                <TextBlock x:Name="StatusLine" Text="后台监控中" Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Waaagh Hub" Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
+                    <TextBlock Text=" · " Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="VerLine" Text="v1.0" Style="{StaticResource TxtCaption}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
